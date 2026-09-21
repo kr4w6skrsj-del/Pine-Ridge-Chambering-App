@@ -1,12 +1,10 @@
-Pine Ridge Chamber
-Version: 0.10
-Build: 2026-09-21
+Pine Ridge Chamber App
+Version: 0.11
 
-Changes:
-- Field text stays red
-- Entry popup now controls box highlighting instead of text color
-- Yellow fill highlights unusual measurements
-- Normal option removes the highlight
-- Yellow highlight works in Fullscreen mode on iPad
-- Existing V0.9 yellow-text selections migrate to yellow highlights
-- V0.10 badge shown on the Home Screen
+Changes in V0.11:
+- All measurement entry boxes are yellow by default.
+- Entry text remains red.
+- Field popup now switches a box between standard yellow and lime green.
+- Lime green is intended to flag an unusual or changed measurement.
+- New chambers initialize every editable box as yellow.
+- Existing blank/white V0.10 fields display as yellow when opened in V0.11.

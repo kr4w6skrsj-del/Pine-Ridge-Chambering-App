@@ -275,10 +275,9 @@ textarea.overlay:focus{border-color:var(--focus)}
   padding:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
 }
 .fieldColorChoice.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.32)}
-.fieldColorChoice[data-fill="normal"]{background:#fff;border-color:#c7cdd3}
-.fieldColorChoice[data-fill="yellow"]{background:#ffe66d;border-color:#d7b900}
-.fieldColorChoice[data-fill="normal"]::after{content:"×";font-size:18px;font-weight:900;color:#69737d;line-height:1}
-.fieldColorChoice[data-fill="yellow"]::after{content:""}
+.fieldColorChoice[data-fill="yellow"]{background:#fff1a8;border-color:#d7b900}
+.fieldColorChoice[data-fill="lime"]{background:#baff63;border-color:#65a91f}
+.fieldColorChoice[data-fill="yellow"]::after,.fieldColorChoice[data-fill="lime"]::after{content:""}
 .stepBtn,.doneBtn{border:0;border-radius:16px;font-weight:800}
 .stepBtn{background:#313842;color:#fff;font-size:26px}
 .doneBtn{background:#fff;color:#111}
@@ -376,7 +375,7 @@ textarea.overlay:focus{border-color:var(--focus)}
   <header class="topbar">
     <div class="topbarInner">
       <button class="navBtn isHidden" id="backBtn"><span class="chev">‹</span> <span>Chambers</span></button>
-      <div class="versionBadge" id="versionBadge" aria-label="App version">V0.10</div>
+      <div class="versionBadge" id="versionBadge" aria-label="App version">V0.11</div>
       <div class="brand" id="brand">
         <div class="mark">PR</div>
         <div class="brandCopy">
@@ -527,8 +526,8 @@ textarea.overlay:focus{border-color:var(--focus)}
 
 
   <div class="fieldColorPopover" id="fieldColorPopover" aria-hidden="true" aria-label="Entry highlight">
-    <button class="fieldColorChoice" data-fill="normal" aria-label="No highlight" title="No highlight"></button>
-    <button class="fieldColorChoice" data-fill="yellow" aria-label="Yellow highlight" title="Yellow highlight"></button>
+    <button class="fieldColorChoice" data-fill="yellow" aria-label="Standard yellow box" title="Standard yellow"></button>
+    <button class="fieldColorChoice" data-fill="lime" aria-label="Lime green highlight" title="Lime green highlight"></button>
   </div>
 
   <div class="scrim" id="scrim"></div>
@@ -537,7 +536,7 @@ textarea.overlay:focus{border-color:var(--focus)}
 </div>
 
 <script>
-window.PINERIDGE_VERSION = "0.10";
+window.PINERIDGE_VERSION = "0.11";
 window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.3407, "top": 11.09, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_hs_actual", "label": "Top HS Actual", "left": 12.3407, "top": 14.8815, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_case_diameter", "label": "Top Chamber Diameter", "left": 19.7183, "top": 26.6351, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_angle", "label": "Shoulder Angle", "left": 5.1643, "top": 39.5261, "width": 9.725, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "drill_diameter", "label": "Drill Diameter", "left": 42.9242, "top": 37.346, "width": 10.7311, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "bore_diameter", "label": "Bore Diameter", "left": 42.9242, "top": 44.9289, "width": 10.7311, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_depth", "label": "Top Depth", "left": 23.7425, "top": 44.9289, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_right_nominal", "label": "A Dimension", "left": 65.2582, "top": 10.9953, "width": 14.4199, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_right_actual", "label": "A Actual", "left": 65.3924, "top": 16.2085, "width": 11.8042, "height": 2.5592, "multiline": false, "inputmode": "decimal"}, {"id": "drill_depth", "label": "Drill Depth Actual", "left": 63.9839, "top": 43.3175, "width": 10.3957, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "shoulder_diameter", "label": "Shoulder Diameter Actual", "left": 84.6412, "top": 40.0948, "width": 11.8042, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_hs_nominal", "label": "Bottom HS", "left": 12.3407, "top": 55.2607, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_hs_actual", "label": "Bottom HS Actual", "left": 12.3407, "top": 58.1991, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_diameter", "label": "Bottom Diameter", "left": 26.0228, "top": 58.8626, "width": 10.0604, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "counterbore_diameter", "label": "Counterbore Diameter", "left": 24.4802, "top": 64.7393, "width": 8.719, "height": 3.7915, "multiline": false, "inputmode": "decimal"}, {"id": "counterbore_depth", "label": "Counterbore Depth", "left": 23.34, "top": 84.3602, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "left_lug_thickness", "label": "Left Lug Thickness", "left": 2.4145, "top": 85.9716, "width": 8.3836, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "lug_thickness", "label": "Lug Thickness", "left": 41.5828, "top": 85.9716, "width": 9.0543, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "reamer_name", "label": "Reamer Name / #", "left": 75.5869, "top": 59.9052, "width": 20.7914, "height": 3.4123, "multiline": false, "inputmode": "text"}, {"id": "date", "label": "Date", "left": 66.063, "top": 82.9384, "width": 19.45, "height": 4.5498, "multiline": false, "inputmode": "text"}, {"id": "notes", "label": "Notes", "left": 67.0691, "top": 65.4028, "width": 29.3763, "height": 16.4929, "multiline": true, "inputmode": "text"}];
 (() => {
   const STORAGE_KEY = "pineridge-chambers-v01";
@@ -562,6 +561,8 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     const values = {};
     window.CHAMBER_FIELDS.forEach(f => values[f.id] = "");
     values.date = today();
+    const fills = {};
+    window.CHAMBER_FIELDS.forEach(f => fills[f.id] = "yellow");
     return {
       id: makeId(),
       name,
@@ -573,7 +574,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
       barrelSn:"",
       values,
       colors:{},
-      fills:{},
+      fills,
       createdAt: now(),
       updatedAt: now()
     };
@@ -699,8 +700,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
 
     $$(".overlay").forEach(el => {
       const value = (r.values || {})[el.dataset.field] || "";
-      const legacyColor = (r.colors || {})[el.dataset.field];
-      const fill = normalizeFieldFill((r.fills || {})[el.dataset.field] || (legacyColor === "#c58f00" ? "yellow" : "normal"));
+      const fill = normalizeFieldFill((r.fills || {})[el.dataset.field] || "yellow");
       el.value = value;
       el.style.setProperty("--field-fill", fillCss(fill));
       el.style.color = "#b22118";
@@ -793,11 +793,11 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   }
 
   function normalizeFieldFill(fill) {
-    return fill === "yellow" ? "yellow" : "normal";
+    return fill === "lime" ? "lime" : "yellow";
   }
 
   function fillCss(fill) {
-    return normalizeFieldFill(fill) === "yellow" ? "#fff1a8" : "rgba(255,255,255,.97)";
+    return normalizeFieldFill(fill) === "lime" ? "#baff63" : "#fff1a8";
   }
 
   function updateFieldFill(id, fill) {
@@ -839,8 +839,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     if (!r || !fieldId || !anchorEl) return;
     activeFieldId = fieldId;
     colorAnchor = anchorEl;
-    const legacyColor = (r.colors || {})[fieldId];
-    const fill = normalizeFieldFill((r.fills || {})[fieldId] || (legacyColor === "#c58f00" ? "yellow" : "normal"));
+    const fill = normalizeFieldFill((r.fills || {})[fieldId] || "yellow");
     $$(".fieldColorChoice").forEach(sw => sw.classList.toggle("active", sw.dataset.fill === fill));
     const pop = $("#fieldColorPopover");
     pop.classList.add("open");
@@ -928,7 +927,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   }
 
   function backupData() {
-    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.10", exportedAt:now(), records}, null, 2)], {type:"application/json"});
+    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.11", exportedAt:now(), records}, null, 2)], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "PineRidgeChambersBackup-" + new Date().toISOString().slice(0,10) + ".json";
