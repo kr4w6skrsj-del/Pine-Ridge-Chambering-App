@@ -1,3 +1,4 @@
-Pine Ridge Chamber App
-Build: V0.7
-Changes: boxed entry fields, smaller portrait type, corrected date field
+Pine Ridge Chamber V0.8
+- Larger iPad worksheet entry font
+- Per-field text color highlighting on iPad
+- Color choices persist with each chamber record

@@ -204,7 +204,7 @@ main{flex:1;display:flex;flex-direction:column}
   border-color:var(--focus);
   box-shadow:0 0 0 2px rgba(42,110,207,.12),0 5px 18px rgba(42,110,207,.12);
 }
-.overlay.hasValue{color:var(--accent)}
+.overlay.hasValue{color:var(--field-color,var(--accent))}
 textarea.overlay {
   border:1.5px solid rgba(178,33,24,.58);
   border-radius:9px;
@@ -253,6 +253,16 @@ textarea.overlay:focus{border-color:var(--focus)}
 .quickMeta button{margin-left:auto;background:transparent;border:0;color:#cfd6de;font-size:28px;line-height:1}
 .quickRow{display:grid;grid-template-columns:52px 1fr 52px 86px;gap:8px}
 .quickField{height:56px;border:0;border-radius:16px;font-size:26px;font-weight:850;padding:0 14px}
+.colorTools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px;padding:9px 10px;border-radius:15px;background:#262c34}
+.colorToolsLabel{font-size:11px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:#cfd6de;margin-right:2px}
+.colorSwatch{width:30px;height:30px;border:2px solid rgba(255,255,255,.18);border-radius:50%;padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);cursor:pointer}
+.colorSwatch.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.28)}
+.colorSwatch[data-color="#b22118"]{background:#b22118}
+.colorSwatch[data-color="#1769aa"]{background:#1769aa}
+.colorSwatch[data-color="#147a4f"]{background:#147a4f}
+.colorSwatch[data-color="#c65b12"]{background:#c65b12}
+.colorSwatch[data-color="#6b4ba3"]{background:#6b4ba3}
+.colorSwatch[data-color="#20262d"]{background:#20262d}
 .stepBtn,.doneBtn{border:0;border-radius:16px;font-weight:800}
 .stepBtn{background:#313842;color:#fff;font-size:26px}
 .doneBtn{background:#fff;color:#111}
@@ -291,6 +301,11 @@ textarea.overlay:focus{border-color:var(--focus)}
   .heroCard{grid-template-columns:1fr}
   .chamberList{grid-template-columns:1fr}
   .chamberCard:nth-child(odd){border-right:0}
+}
+@media (min-width: 721px) and (max-width: 1366px) {
+  .overlay{font-size:clamp(13px,1.55vw,18px)}
+  textarea.overlay{font-size:clamp(13px,1.45vw,17px);line-height:1.15}
+  .overlay[data-field="date"]{font-size:clamp(12px,1.35vw,16px)}
 }
 @media (max-width: 720px) {
   .topbarInner{min-height:62px;padding:8px 12px}
@@ -439,7 +454,7 @@ textarea.overlay:focus{border-color:var(--focus)}
             </div>
 
             <div class="stageHint">
-              <div class="infoCard"><small>Tap any red measurement directly on the drawing to edit it.</small></div>
+              <div class="infoCard"><small>Tap any measurement box to edit it. On iPad, use Text Color to highlight an entry.</small></div>
               <div class="infoCard"><small id="saveStatus">Saved locally</small></div>
             </div>
           </div>
@@ -490,6 +505,15 @@ textarea.overlay:focus{border-color:var(--focus)}
       <button class="stepBtn" id="quickNext">›</button>
       <button class="doneBtn" id="quickDone">Done</button>
     </div>
+    <div class="colorTools" id="colorTools" aria-label="Text color">
+      <span class="colorToolsLabel">Text color</span>
+      <button class="colorSwatch" data-color="#b22118" aria-label="Red"></button>
+      <button class="colorSwatch" data-color="#1769aa" aria-label="Blue"></button>
+      <button class="colorSwatch" data-color="#147a4f" aria-label="Green"></button>
+      <button class="colorSwatch" data-color="#c65b12" aria-label="Orange"></button>
+      <button class="colorSwatch" data-color="#6b4ba3" aria-label="Purple"></button>
+      <button class="colorSwatch" data-color="#20262d" aria-label="Black"></button>
+    </div>
   </div>
 
   <div class="scrim" id="scrim"></div>
@@ -531,6 +555,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
       barrel:"",
       barrelSn:"",
       values,
+      colors:{},
       createdAt: now(),
       updatedAt: now()
     };
@@ -649,7 +674,9 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
 
     $$(".overlay").forEach(el => {
       const value = (r.values || {})[el.dataset.field] || "";
+      const color = (r.colors || {})[el.dataset.field] || "#b22118";
       el.value = value;
+      el.style.setProperty("--field-color", color);
       el.classList.toggle("hasValue", !!value);
     });
     renderHome();
@@ -736,6 +763,20 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     touch();
   }
 
+  function updateFieldColor(id, color) {
+    const r = active();
+    if (!r || !id) return;
+    r.colors ||= {};
+    r.colors[id] = color;
+    const el = $(`.overlay[data-field="${id}"]`);
+    if (el) el.style.setProperty("--field-color", color);
+    if (activeFieldId === id) {
+      $("#quickField").style.color = color;
+      $$(".colorSwatch").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
+    }
+    touch();
+  }
+
   function bindDetailInputs() {
     const map = {
       field_name: "name",
@@ -767,6 +808,9 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#quickIndex").textContent = (window.CHAMBER_FIELDS.findIndex(x => x.id === fieldId) + 1) + " / " + window.CHAMBER_FIELDS.length;
     $("#quickField").inputMode = field.inputmode || "text";
     $("#quickField").value = (r.values || {})[fieldId] || "";
+    const color = (r.colors || {})[fieldId] || "#b22118";
+    $("#quickField").style.color = color;
+    $$(".colorSwatch").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
     $("#quickEditor").classList.add("open");
     $("#quickEditor").setAttribute("aria-hidden", "false");
   }
@@ -806,7 +850,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   }
 
   function backupData() {
-    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.7", exportedAt:now(), records}, null, 2)], {type:"application/json"});
+    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.8", exportedAt:now(), records}, null, 2)], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "PineRidgeChambersBackup-" + new Date().toISOString().slice(0,10) + ".json";
@@ -869,6 +913,9 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#quickPrev").onclick = () => moveQuick(-1);
     $("#quickNext").onclick = () => moveQuick(1);
     $("#quickField").addEventListener("input", e => { if (activeFieldId) updateValue(activeFieldId, e.target.value); });
+    $$(".colorSwatch").forEach(sw => sw.addEventListener("click", () => {
+      if (activeFieldId) updateFieldColor(activeFieldId, sw.dataset.color);
+    }));
     $("#quickField").addEventListener("keydown", e => {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); moveQuick(1); }
     });

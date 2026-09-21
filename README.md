@@ -1,3 +1,5 @@
 # Pine Ridge Chamber App
 
-Current build: V0.7
+Version 0.8
+
+Static GitHub Pages app. Deploy `index.html` from the repository root.
