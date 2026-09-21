@@ -1,9 +1,12 @@
 Pine Ridge Chamber
-Version: 0.9
+Version: 0.10
 Build: 2026-09-21
 
 Changes:
-- Three-color field popup beside the active entry: Red, Yellow, Black
-- Color popup works in Fullscreen mode on iPad
-- iPad measurement font increased one step
-- Home Screen version badge added
+- Field text stays red
+- Entry popup now controls box highlighting instead of text color
+- Yellow fill highlights unusual measurements
+- Normal option removes the highlight
+- Yellow highlight works in Fullscreen mode on iPad
+- Existing V0.9 yellow-text selections migrate to yellow highlights
+- V0.10 badge shown on the Home Screen
