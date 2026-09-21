@@ -1,5 +1,5 @@
 # Pine Ridge Chamber App
 
-Version 0.8
+Version 0.9
 
-Static GitHub Pages app. Deploy `index.html` from the repository root.
+GitHub Pages app for Pine Ridge chamber worksheets.

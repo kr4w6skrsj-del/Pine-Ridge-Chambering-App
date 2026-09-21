@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f5f2">
+<meta name="pineridge-version" content="0.9">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PR Chamber">
 <title>Pine Ridge Chamber</title>
@@ -47,6 +48,14 @@ body{-webkit-tap-highlight-color:transparent}
   min-height:68px;
   display:flex;align-items:center;gap:12px;
   padding:10px 16px;
+}
+.versionBadge {
+  flex:0 0 auto;
+  min-width:48px;height:30px;padding:0 9px;
+  border-radius:999px;background:#171b20;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;letter-spacing:.035em;
+  box-shadow:0 4px 14px rgba(23,27,32,.12);
 }
 .brand {
   display:flex;align-items:center;gap:12px;min-width:0;
@@ -253,16 +262,22 @@ textarea.overlay:focus{border-color:var(--focus)}
 .quickMeta button{margin-left:auto;background:transparent;border:0;color:#cfd6de;font-size:28px;line-height:1}
 .quickRow{display:grid;grid-template-columns:52px 1fr 52px 86px;gap:8px}
 .quickField{height:56px;border:0;border-radius:16px;font-size:26px;font-weight:850;padding:0 14px}
-.colorTools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px;padding:9px 10px;border-radius:15px;background:#262c34}
-.colorToolsLabel{font-size:11px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:#cfd6de;margin-right:2px}
-.colorSwatch{width:30px;height:30px;border:2px solid rgba(255,255,255,.18);border-radius:50%;padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);cursor:pointer}
-.colorSwatch.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.28)}
-.colorSwatch[data-color="#b22118"]{background:#b22118}
-.colorSwatch[data-color="#1769aa"]{background:#1769aa}
-.colorSwatch[data-color="#147a4f"]{background:#147a4f}
-.colorSwatch[data-color="#c65b12"]{background:#c65b12}
-.colorSwatch[data-color="#6b4ba3"]{background:#6b4ba3}
-.colorSwatch[data-color="#20262d"]{background:#20262d}
+.fieldColorPopover{
+  position:fixed;z-index:115;display:flex;align-items:center;gap:6px;
+  padding:7px;background:rgba(22,26,32,.97);border:1px solid rgba(255,255,255,.12);
+  border-radius:13px;box-shadow:0 12px 30px rgba(0,0,0,.28);
+  opacity:0;pointer-events:none;transform:translateY(4px) scale(.97);
+  transition:opacity .12s ease,transform .12s ease;
+}
+.fieldColorPopover.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.fieldColorChoice{
+  width:34px;height:34px;border-radius:9px;border:2px solid rgba(255,255,255,.26);
+  padding:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
+}
+.fieldColorChoice.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.32)}
+.fieldColorChoice[data-color="#b22118"]{background:#b22118}
+.fieldColorChoice[data-color="#c58f00"]{background:#e0ad14}
+.fieldColorChoice[data-color="#20262d"]{background:#20262d}
 .stepBtn,.doneBtn{border:0;border-radius:16px;font-weight:800}
 .stepBtn{background:#313842;color:#fff;font-size:26px}
 .doneBtn{background:#fff;color:#111}
@@ -303,12 +318,13 @@ textarea.overlay:focus{border-color:var(--focus)}
   .chamberCard:nth-child(odd){border-right:0}
 }
 @media (min-width: 721px) and (max-width: 1366px) {
-  .overlay{font-size:clamp(13px,1.55vw,18px)}
-  textarea.overlay{font-size:clamp(13px,1.45vw,17px);line-height:1.15}
-  .overlay[data-field="date"]{font-size:clamp(12px,1.35vw,16px)}
+  .overlay{font-size:clamp(14px,1.65vw,19px)}
+  textarea.overlay{font-size:clamp(14px,1.50vw,18px);line-height:1.15}
+  .overlay[data-field="date"]{font-size:clamp(13px,1.40vw,17px)}
 }
 @media (max-width: 720px) {
   .topbarInner{min-height:62px;padding:8px 12px}
+  .versionBadge{min-width:44px;height:28px;font-size:11px;padding:0 8px}
   .mark{width:38px;height:38px;border-radius:13px}
   .brandCopy strong{font-size:15px} .brandCopy span{display:none}
   .topActions .ghostBtn{display:none}
@@ -344,7 +360,7 @@ textarea.overlay:focus{border-color:var(--focus)}
 @media print {
   @page{size:landscape;margin:.18in}
   body{background:#fff}
-  .topbar,.viewerTop,.infoStrip,.stageHint,.quickEditor,.detailsDrawer,.scrim,.toast,.homeScreen{display:none!important}
+  .topbar,.viewerTop,.infoStrip,.stageHint,.quickEditor,.fieldColorPopover,.detailsDrawer,.scrim,.toast,.homeScreen{display:none!important}
   .viewerScreen{display:block!important;background:#fff}
   .stageWrap{padding:0!important}
   .stage{width:100%!important;min-height:auto;border:0;border-radius:0;box-shadow:none}
@@ -359,6 +375,7 @@ textarea.overlay:focus{border-color:var(--focus)}
   <header class="topbar">
     <div class="topbarInner">
       <button class="navBtn isHidden" id="backBtn"><span class="chev">‹</span> <span>Chambers</span></button>
+      <div class="versionBadge" id="versionBadge" aria-label="App version">V0.9</div>
       <div class="brand" id="brand">
         <div class="mark">PR</div>
         <div class="brandCopy">
@@ -454,7 +471,7 @@ textarea.overlay:focus{border-color:var(--focus)}
             </div>
 
             <div class="stageHint">
-              <div class="infoCard"><small>Tap any measurement box to edit it. On iPad, use Text Color to highlight an entry.</small></div>
+              <div class="infoCard"><small>Tap any measurement box to edit it. On iPad, choose Red, Yellow, or Black beside the field.</small></div>
               <div class="infoCard"><small id="saveStatus">Saved locally</small></div>
             </div>
           </div>
@@ -505,15 +522,13 @@ textarea.overlay:focus{border-color:var(--focus)}
       <button class="stepBtn" id="quickNext">›</button>
       <button class="doneBtn" id="quickDone">Done</button>
     </div>
-    <div class="colorTools" id="colorTools" aria-label="Text color">
-      <span class="colorToolsLabel">Text color</span>
-      <button class="colorSwatch" data-color="#b22118" aria-label="Red"></button>
-      <button class="colorSwatch" data-color="#1769aa" aria-label="Blue"></button>
-      <button class="colorSwatch" data-color="#147a4f" aria-label="Green"></button>
-      <button class="colorSwatch" data-color="#c65b12" aria-label="Orange"></button>
-      <button class="colorSwatch" data-color="#6b4ba3" aria-label="Purple"></button>
-      <button class="colorSwatch" data-color="#20262d" aria-label="Black"></button>
-    </div>
+  </div>
+
+
+  <div class="fieldColorPopover" id="fieldColorPopover" aria-hidden="true" aria-label="Entry text color">
+    <button class="fieldColorChoice" data-color="#b22118" aria-label="Red" title="Red"></button>
+    <button class="fieldColorChoice" data-color="#c58f00" aria-label="Yellow" title="Yellow"></button>
+    <button class="fieldColorChoice" data-color="#20262d" aria-label="Black" title="Black"></button>
   </div>
 
   <div class="scrim" id="scrim"></div>
@@ -522,6 +537,7 @@ textarea.overlay:focus{border-color:var(--focus)}
 </div>
 
 <script>
+window.PINERIDGE_VERSION = "0.9";
 window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.3407, "top": 11.09, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_hs_actual", "label": "Top HS Actual", "left": 12.3407, "top": 14.8815, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_case_diameter", "label": "Top Chamber Diameter", "left": 19.7183, "top": 26.6351, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_angle", "label": "Shoulder Angle", "left": 5.1643, "top": 39.5261, "width": 9.725, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "drill_diameter", "label": "Drill Diameter", "left": 42.9242, "top": 37.346, "width": 10.7311, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "bore_diameter", "label": "Bore Diameter", "left": 42.9242, "top": 44.9289, "width": 10.7311, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_depth", "label": "Top Depth", "left": 23.7425, "top": 44.9289, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "top_right_nominal", "label": "A Dimension", "left": 65.2582, "top": 10.9953, "width": 14.4199, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "top_right_actual", "label": "A Actual", "left": 65.3924, "top": 16.2085, "width": 11.8042, "height": 2.5592, "multiline": false, "inputmode": "decimal"}, {"id": "drill_depth", "label": "Drill Depth Actual", "left": 63.9839, "top": 43.3175, "width": 10.3957, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "shoulder_diameter", "label": "Shoulder Diameter Actual", "left": 84.6412, "top": 40.0948, "width": 11.8042, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_hs_nominal", "label": "Bottom HS", "left": 12.3407, "top": 55.2607, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_hs_actual", "label": "Bottom HS Actual", "left": 12.3407, "top": 58.1991, "width": 8.719, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "bottom_diameter", "label": "Bottom Diameter", "left": 26.0228, "top": 58.8626, "width": 10.0604, "height": 3.0332, "multiline": false, "inputmode": "decimal"}, {"id": "counterbore_diameter", "label": "Counterbore Diameter", "left": 24.4802, "top": 64.7393, "width": 8.719, "height": 3.7915, "multiline": false, "inputmode": "decimal"}, {"id": "counterbore_depth", "label": "Counterbore Depth", "left": 23.34, "top": 84.3602, "width": 10.0604, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "left_lug_thickness", "label": "Left Lug Thickness", "left": 2.4145, "top": 85.9716, "width": 8.3836, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "lug_thickness", "label": "Lug Thickness", "left": 41.5828, "top": 85.9716, "width": 9.0543, "height": 3.2227, "multiline": false, "inputmode": "decimal"}, {"id": "reamer_name", "label": "Reamer Name / #", "left": 75.5869, "top": 59.9052, "width": 20.7914, "height": 3.4123, "multiline": false, "inputmode": "text"}, {"id": "date", "label": "Date", "left": 66.063, "top": 82.9384, "width": 19.45, "height": 4.5498, "multiline": false, "inputmode": "text"}, {"id": "notes", "label": "Notes", "left": 67.0691, "top": 65.4028, "width": 29.3763, "height": 16.4929, "multiline": true, "inputmode": "text"}];
 (() => {
   const STORAGE_KEY = "pineridge-chambers-v01";
@@ -529,6 +545,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   let records = [];
   let activeId = null;
   let activeFieldId = null;
+  let colorAnchor = null;
   let presentMode = false;
 
   const $ = (s) => document.querySelector(s);
@@ -646,7 +663,14 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
       } else {
         el.placeholder = "";
       }
-      el.addEventListener("focus", () => { activeFieldId = f.id; if (!isPhone()) openQuick(f.id); });
+      el.addEventListener("focus", () => {
+        activeFieldId = f.id;
+        if (!isPhone()) { openQuick(f.id); openColorPopover(f.id, el); }
+      });
+      el.addEventListener("click", () => {
+        activeFieldId = f.id;
+        if (!isPhone()) openColorPopover(f.id, el);
+      });
       el.addEventListener("input", () => updateValue(f.id, el.value, true));
       wrap.appendChild(el);
     });
@@ -674,7 +698,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
 
     $$(".overlay").forEach(el => {
       const value = (r.values || {})[el.dataset.field] || "";
-      const color = (r.colors || {})[el.dataset.field] || "#b22118";
+      const color = normalizeFieldColor((r.colors || {})[el.dataset.field]);
       el.value = value;
       el.style.setProperty("--field-color", color);
       el.classList.toggle("hasValue", !!value);
@@ -690,6 +714,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#homeScreen").classList.add("active");
     $("#viewerScreen").classList.remove("active");
     $("#backBtn").classList.add("isHidden");
+    $("#versionBadge").classList.remove("isHidden");
     $("#brand").classList.remove("isHidden");
     $("#homeActions").classList.remove("isHidden");
     $("#viewerActionsTop").classList.add("isHidden");
@@ -703,6 +728,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#homeScreen").classList.remove("active");
     $("#viewerScreen").classList.add("active");
     $("#backBtn").classList.remove("isHidden");
+    $("#versionBadge").classList.add("isHidden");
     $("#homeActions").classList.add("isHidden");
     $("#viewerActionsTop").classList.remove("isHidden");
     window.scrollTo({top:0, behavior:"instant"});
@@ -763,18 +789,61 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     touch();
   }
 
+  function normalizeFieldColor(color) {
+    return ["#b22118", "#c58f00", "#20262d"].includes(color) ? color : "#b22118";
+  }
+
   function updateFieldColor(id, color) {
     const r = active();
     if (!r || !id) return;
+    color = normalizeFieldColor(color);
     r.colors ||= {};
     r.colors[id] = color;
     const el = $(`.overlay[data-field="${id}"]`);
     if (el) el.style.setProperty("--field-color", color);
     if (activeFieldId === id) {
       $("#quickField").style.color = color;
-      $$(".colorSwatch").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
+      $$(".fieldColorChoice").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
     }
     touch();
+  }
+
+  function positionColorPopover(anchor = colorAnchor) {
+    const pop = $("#fieldColorPopover");
+    if (!pop || !pop.classList.contains("open") || !anchor || !document.body.contains(anchor)) return;
+    const rect = anchor.getBoundingClientRect();
+    const pw = pop.offsetWidth || 126;
+    const ph = pop.offsetHeight || 50;
+    const pad = 8;
+    let left = rect.left + (rect.width - pw) / 2;
+    left = Math.max(pad, Math.min(left, window.innerWidth - pw - pad));
+    let top = rect.bottom + 7;
+    if (top + ph + pad > window.innerHeight) top = rect.top - ph - 7;
+    top = Math.max(pad, Math.min(top, window.innerHeight - ph - pad));
+    pop.style.left = Math.round(left) + "px";
+    pop.style.top = Math.round(top) + "px";
+  }
+
+  function openColorPopover(fieldId, anchorEl) {
+    if (isPhone()) return;
+    const r = active();
+    if (!r || !fieldId || !anchorEl) return;
+    activeFieldId = fieldId;
+    colorAnchor = anchorEl;
+    const color = normalizeFieldColor((r.colors || {})[fieldId]);
+    $$(".fieldColorChoice").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
+    const pop = $("#fieldColorPopover");
+    pop.classList.add("open");
+    pop.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(() => positionColorPopover(anchorEl));
+  }
+
+  function closeColorPopover() {
+    colorAnchor = null;
+    const pop = $("#fieldColorPopover");
+    if (!pop) return;
+    pop.classList.remove("open");
+    pop.setAttribute("aria-hidden", "true");
   }
 
   function bindDetailInputs() {
@@ -808,14 +877,14 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#quickIndex").textContent = (window.CHAMBER_FIELDS.findIndex(x => x.id === fieldId) + 1) + " / " + window.CHAMBER_FIELDS.length;
     $("#quickField").inputMode = field.inputmode || "text";
     $("#quickField").value = (r.values || {})[fieldId] || "";
-    const color = (r.colors || {})[fieldId] || "#b22118";
+    const color = normalizeFieldColor((r.colors || {})[fieldId]);
     $("#quickField").style.color = color;
-    $$(".colorSwatch").forEach(sw => sw.classList.toggle("active", sw.dataset.color === color));
     $("#quickEditor").classList.add("open");
     $("#quickEditor").setAttribute("aria-hidden", "false");
   }
   function closeQuick() {
     activeFieldId = null;
+    closeColorPopover();
     $("#quickEditor").classList.remove("open");
     $("#quickEditor").setAttribute("aria-hidden", "true");
   }
@@ -850,7 +919,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   }
 
   function backupData() {
-    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.8", exportedAt:now(), records}, null, 2)], {type:"application/json"});
+    const blob = new Blob([JSON.stringify({app:"Pine Ridge Chamber", version:"0.9", exportedAt:now(), records}, null, 2)], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "PineRidgeChambersBackup-" + new Date().toISOString().slice(0,10) + ".json";
@@ -881,6 +950,7 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    $("#versionBadge").textContent = "V" + window.PINERIDGE_VERSION;
     load();
     renderWorksheetFields();
     bindDetailInputs();
@@ -913,9 +983,13 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
     $("#quickPrev").onclick = () => moveQuick(-1);
     $("#quickNext").onclick = () => moveQuick(1);
     $("#quickField").addEventListener("input", e => { if (activeFieldId) updateValue(activeFieldId, e.target.value); });
-    $$(".colorSwatch").forEach(sw => sw.addEventListener("click", () => {
-      if (activeFieldId) updateFieldColor(activeFieldId, sw.dataset.color);
-    }));
+    $$(".fieldColorChoice").forEach(sw => {
+      sw.addEventListener("pointerdown", e => e.preventDefault());
+      sw.addEventListener("click", () => {
+        if (activeFieldId) updateFieldColor(activeFieldId, sw.dataset.color);
+        closeColorPopover();
+      });
+    });
     $("#quickField").addEventListener("keydown", e => {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); moveQuick(1); }
     });
@@ -926,7 +1000,16 @@ window.CHAMBER_FIELDS = [{"id": "top_hs_nominal", "label": "Top HS", "left": 12.
       e.target.value = "";
     });
 
-    window.addEventListener("resize", () => { if (isPhone()) closeQuick(); });
+    document.addEventListener("pointerdown", e => {
+      const pop = $("#fieldColorPopover");
+      if (!pop.contains(e.target) && !e.target.classList.contains("overlay")) closeColorPopover();
+    });
+    window.addEventListener("scroll", () => positionColorPopover(), true);
+    window.addEventListener("orientationchange", () => setTimeout(() => positionColorPopover(), 120));
+    window.addEventListener("resize", () => {
+      if (isPhone()) closeQuick();
+      else positionColorPopover();
+    });
   });
 })();
 </script>

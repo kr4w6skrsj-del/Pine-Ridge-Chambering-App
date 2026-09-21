@@ -1,4 +1,9 @@
-Pine Ridge Chamber V0.8
-- Larger iPad worksheet entry font
-- Per-field text color highlighting on iPad
-- Color choices persist with each chamber record
+Pine Ridge Chamber
+Version: 0.9
+Build: 2026-09-21
+
+Changes:
+- Three-color field popup beside the active entry: Red, Yellow, Black
+- Color popup works in Fullscreen mode on iPad
+- iPad measurement font increased one step
+- Home Screen version badge added
